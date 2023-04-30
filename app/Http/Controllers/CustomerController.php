@@ -36,6 +36,9 @@ class CustomerController extends Controller
 
         // Custom search filter 
         $searchGender = $request->get('searchGender');
+        $searchAge = $request->get('searchAge');
+        $searchIncome = $request->get('searchIncome');
+        $searchProfession = $request->get('searchProfession');
         
         // Total records
         $records = Customer::select('count(*) as allcount');
@@ -44,41 +47,68 @@ class CustomerController extends Controller
         if(!empty($searchGender)){
             $records->where('gender', 'like', '%'.$searchGender.'%');
         }
+        if(!empty($searchAge)){
+            $records->where('age', 'like', '%'.$searchAge.'%');
+        }
+        if(!empty($searchIncome)){
+            $records->where('income', 'like', '%'.$searchIncome.'%');
+        }
+        if(!empty($searchProfession)){
+            $records->where('profession', 'like', '%'.$searchProfession.'%');
+        }
         $totalRecords = $records->count();
 
         // Total records with filter
-        $records = Customer::select('count(*) as allcount')->where('gender', 'like', '%'.$searchGender.'%');
+        $records = Customer::select('count(*) as allcount')->where('spending_score', 'like', '%'.$searchValue.'%');
 
         ## Add custom filter conditions
         if(!empty($searchGender)){
             $records->where('gender', 'like', '%'.$searchGender.'%');
+        }
+        if(!empty($searchAge)){
+            $records->where('age', 'like', '%'.$searchAge.'%');
+        }
+        if(!empty($searchIncome)){
+            $records->where('income', 'like', '%'.$searchIncome.'%');
+        }
+        if(!empty($searchProfession)){
+            $records->where('profession', 'like', '%'.$searchProfession.'%');
         }
         $totalRecordswithFilter = $records->count();
 
         // Fetch records
         $records = Customer::orderBy($columnName, $columnSortOrder)
-            ->where('gender', 'like', '%'.$searchValue.'%');
+            ->where('spending_score', 'like', '%'.$searchValue.'%');
         ## Add custom filter conditions
         if(!empty($searchGender)){
             $records->where('gender', 'like', '%'.$searchGender.'%');
         }
-        $data_customer = $records->skip($start)
+        if(!empty($searchAge)){
+            $records->where('age', 'like', '%'.$searchAge.'%');
+        }
+        if(!empty($searchIncome)){
+            $records->where('income', 'like', '%'.$searchIncome.'%');
+        }
+        if(!empty($searchProfession)){
+            $records->where('profession', 'like', '%'.$searchProfession.'%');
+        }
+        $dataCustomer = $records->skip($start)
             ->take($rowperpage)
             ->get();
 
         $no = $start;
         $data_arr = array();
-        foreach($data_customer as $row_customer){
+        foreach($dataCustomer as $rowCustomer){
             $no++;
 
-            $id = $row_customer->id;
-            $gender = $row_customer->gender;
-            $age = $row_customer->age;
-            $income = $row_customer->income;
-            $spending_score = $row_customer->spending_score;
-            $profession = $row_customer->profession;
-            $work_experience = $row_customer->work_experience;
-            $family_size = $row_customer->family_size;
+            $id = $rowCustomer->id;
+            $gender = $rowCustomer->gender;
+            $age = $rowCustomer->age;
+            $income = $rowCustomer->income;
+            $spending_score = $rowCustomer->spending_score;
+            $profession = $rowCustomer->profession;
+            $work_experience = $rowCustomer->work_experience;
+            $family_size = $rowCustomer->family_size;
             
             $data_arr[] = array(
                 "id" => $no,
@@ -89,7 +119,8 @@ class CustomerController extends Controller
                 "profession" => $profession,
                 "work_experience" => $work_experience,
                 "family_size" => $family_size,
-                "aksi" => '',
+                "aksi" => 
+                '<button class="btn btn-warning btn-xs" onClick="goEditCustomer('.$id.')"><i class="fa fa-eye"></i></button> <button class="btn btn-danger btn-xs" onClick="goDeleteCustomer('.$id.')"><i class="fa fa-trash-o"></i></button>' 
             );
         }
 

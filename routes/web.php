@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\UserController;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,16 @@ Route::middleware(['auth'])->group(function(){
         Route::get('edit/{id}', [CustomerController::class, 'edit']);
         Route::post('update/{id}', [CustomerController::class, 'update']);
         Route::delete('delete/{id}', [CustomerController::class, 'destroy']);
-        Route::get('ajaxCustomer', [CustomerController::class, 'ajaxCustomer']);
+        Route::get('ajaxCustomer', [CustomerController::class, 'ajaxCustomer'])->name('getCustomer');
+    });
+
+    Route::prefix('user')->group(function(){
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('create', [UserController::class, 'create']);
+        Route::post('store', [UserController::class, 'store']);
+        Route::get('edit/{id}', [UserController::class, 'edit']);
+        Route::post('update/{id}', [UserController::class, 'update']);
+        Route::delete('delete/{id}', [UserController::class, 'destroy']);
     });
     
 });

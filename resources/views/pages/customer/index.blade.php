@@ -13,71 +13,78 @@
 
     <section class="content">
         @include('includes.alert')
+        <!-- filter -->
         <div class="row">
-            <div class="col-xs-12">
-                <div class="box box-info">
-                    <diV class="box-body">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Gender</label>
-                            <div class="col-sm-10">
-                                <input type="text" />
+            <div class="col-xs-8">
+                <div class="box">
+                    <div class="box box-warning">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Filter</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
                             </div>
                         </div>
-                    </diV>
+                        <div class="box-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Gender</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="searchGender" placeholder="Fill Gender" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Age</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="searchAge" placeholder="Fill age" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Income</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="searchIncome" placeholder="Fill Income" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Profession</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="searchProfession" placeholder="Fill Profession" />
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- data -->
         <div class="row">
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Customer</h3>
+                        <h3 class="box-title">{{ $title }}</h3>
                         <button class="btn btn-primary btn-sm pull-right" onclick="goAddCustomer()"><i class="fa fa-plus"></i> Create</button>
                     </div>
                     <div class="box-body">
-                        <table id="example" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th style="text-align:center; width:5%">No</th>
-                                    <th>Gender</th>
-                                    <th>Age</th>
-                                    <th>Annual Income</th>
-                                    <th>Spending Score</th>
-                                    <th>Profession</th>
-                                    <th>Work Experience</th>
-                                    <th>Family Size</th>
-                                    <th style="text-align:center; width:15%">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if(count($listCustomers) > 0)
-                                @foreach($listCustomers as $i => $rowCustomer)
-                                <tr>
-                                    <td style="text-align:center">{{ $i+1 }}</td>
-                                    <td>{{ $rowCustomer->gender }}</td>
-                                    <td>{{ $rowCustomer->age }}</td>
-                                    <td style="text-align:right;">{{ $rowCustomer->income }}</td>
-                                    <td>{{ $rowCustomer->spending_score }}</td>
-                                    <td>{{ $rowCustomer->profession }}</td>
-                                    <td>{{ $rowCustomer->work_experience }}</td>
-                                    <td>{{ $rowCustomer->family_size }}</td>
-                                    <td style="text-align:center;">
-                                        <form method="post" action="{{ url('customer/delete/'.$rowCustomer->id) }}">
-                                            @csrf
-                                            @method('delete')
-                                            <a href="{{ url('customer/edit/'.$rowCustomer->id) }}" class="btn btn-warning btn-xs"><i class="fa fa-pencil-square-o"></i></a>
-                                            <button class="btn btn-danger btn-xs" onclick="return confirm('Are you sure to delete this data? id: {{ $rowCustomer->id }}')" type="submit"><i class="fa fa-trash-o"></i></button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @endforeach
-                                @else
-                                <tr>
-                                    <td colspan="9" style="text-align:center;"><i>Data Kosong</i></td>
-                                </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="table_customer" class="table table-bordered table-striped responsive">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center; width:5%">No</th>
+                                        <th>Gender</th>
+                                        <th>Age</th>
+                                        <th>Annual Income</th>
+                                        <th>Spending Score</th>
+                                        <th>Profession</th>
+                                        <th>Work Experience</th>
+                                        <th>Family Size</th>
+                                        <th style="text-align:center; width:10%">Action</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,6 +95,97 @@
         function goAddCustomer() {
             window.location.href = "{{ url('customer/create') }}";
         }
+
+        function goEditCustomer($id) {
+            var idCustomer = $id;
+            window.location.href = "{{ url('customer/edit/') }}/" + idCustomer;
+        }
+
+        function goDeleteCustomer($id) {
+            var idCustomer = $id;
+            if (confirm("Are you sure to delete this data?")) {
+                $.ajax({
+                    url: "{{ url('customer/delete/') }}/" + idCustomer,
+                    type: 'DELETE',
+                    success: function() {
+                        location.reload();
+                    },
+                    error: function() {
+                        alert('An error occurred while deleting the data.');
+                    }
+                });
+            }
+        }
+    </script>
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js '></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // ajax
+            var customerTable = $('#table_customer').DataTable({
+                processing: true,
+                serverSide: true,
+                searching: false,
+
+                ajax: {
+                    url: "{{ route('getCustomer') }}",
+                    data: function(data) {
+                        data.searchGender = $('#searchGender').val();
+                        data.searchAge = $('#searchAge').val();
+                        data.searchIncome = $('#searchIncome').val();
+                        data.searchProfession = $('#searchProfession').val();
+                    }
+                },
+                columns: [{
+                        data: 'id',
+                        className: 'dt-center'
+                    },
+                    {
+                        data: 'gender'
+                    },
+                    {
+                        data: 'age'
+                    },
+                    {
+                        data: 'income',
+                        className: 'dt-right'
+                    },
+                    {
+                        data: 'spending_score',
+                    },
+                    {
+                        data: 'profession'
+                    },
+                    {
+                        data: 'work_experience',
+                        className: 'dt-center',
+                        orderable: false
+                    },
+                    {
+                        data: 'family_size',
+                        className: 'dt-center',
+                        orderable: false
+                    },
+                    {
+                        data: 'aksi',
+                        orderable: false
+                    },
+                ]
+            });
+
+            $('#searchGender').keyup(function() {
+                customerTable.draw();
+            });
+            $('#searchAge').keyup(function() {
+                customerTable.draw();
+            });
+            $('#searchIncome').keyup(function() {
+                customerTable.draw();
+            });
+            $('#searchProfession').change(function() {
+                customerTable.draw();
+            });
+
+        });
     </script>
 
 </div>
