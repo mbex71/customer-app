@@ -29,25 +29,25 @@
                             <form class="form-horizontal">
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Gender</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <input type="text" class="form-control" id="searchGender" placeholder="Fill Gender" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Age</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <input type="text" class="form-control" id="searchAge" placeholder="Fill age" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Income</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <input type="text" class="form-control" id="searchIncome" placeholder="Fill Income" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Profession</label>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <input type="text" class="form-control" id="searchProfession" placeholder="Fill Profession" />
                                     </div>
                                 </div>
@@ -96,22 +96,25 @@
             window.location.href = "{{ url('customer/create') }}";
         }
 
-        function goEditCustomer($id) {
-            var idCustomer = $id;
-            window.location.href = "{{ url('customer/edit/') }}/" + idCustomer;
+        function goEditCustomer(id) {
+            window.location.href = "{{ url('customer/edit/') }}/" + id;
         }
 
-        function goDeleteCustomer($id) {
-            var idCustomer = $id;
+        function goDeleteCustomer(id) {
             if (confirm("Are you sure to delete this data?")) {
                 $.ajax({
-                    url: "{{ url('customer/delete/') }}/" + idCustomer,
-                    type: 'DELETE',
+                    url: "{{ url('customer/delete/') }}/" + id,
+                    type: "POST", // use the POST method
+                    data: {
+                        _method: "DELETE", // add the method spoofing field
+                        _token: $('meta[name="csrf-token"]').attr("content")
+                    },
                     success: function() {
+                        alert("Data has been deleted.");
                         location.reload();
                     },
                     error: function() {
-                        alert('An error occurred while deleting the data.');
+                        alert("An error occurred while deleting the data.");
                     }
                 });
             }

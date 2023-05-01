@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('store', [CustomerController::class, 'store']);
         Route::get('edit/{id}', [CustomerController::class, 'edit']);
         Route::post('update/{id}', [CustomerController::class, 'update']);
-        Route::delete('delete/{id}', [CustomerController::class, 'destroy']);
+        Route::post('delete/{id}', [CustomerController::class, 'destroy']);
         Route::get('ajaxCustomer', [CustomerController::class, 'ajaxCustomer'])->name('getCustomer');
     });
 
