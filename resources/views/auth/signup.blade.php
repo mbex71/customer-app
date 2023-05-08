@@ -37,7 +37,7 @@
 
     <div class="register-box-body">
       <p class="login-box-msg">Register a new account</p>
-      @include('includes.alert')>
+      @include('includes.alert')
 
       <form action="{{ url('signup') }}" method="post">
         @csrf

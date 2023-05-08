@@ -103,18 +103,17 @@
         function goDeleteCustomer(id) {
             if (confirm("Are you sure to delete this data?")) {
                 $.ajax({
-                    url: "{{ url('customer/delete/') }}/" + id,
-                    type: "POST", // use the POST method
+                    url: "{{ url('customer/delete') }}/" + id,
+                    type: "POST",
                     data: {
-                        _method: "DELETE", // add the method spoofing field
                         _token: $('meta[name="csrf-token"]').attr("content")
                     },
                     success: function() {
                         alert("Data has been deleted.");
                         location.reload();
                     },
-                    error: function() {
-                        alert("An error occurred while deleting the data.");
+                    error: function(xhr, status, error) {
+                        alert("An error occurred while deleting the data. Error message: " + xhr.responseText);
                     }
                 });
             }

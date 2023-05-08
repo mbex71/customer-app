@@ -197,7 +197,7 @@ class CustomerController extends Controller
             $customer = Customer::findOrFail($id);
             $customer->delete();
 
-            return redirect()->route('customer')->with('success', 'Data deleted successfully!');
+            return response()->json(['success' => 'Data deleted successfully!']);
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', 'Failed to delete data!. Error : '.$th->getMessage());
         }
