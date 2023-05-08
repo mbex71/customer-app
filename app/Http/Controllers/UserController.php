@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -17,12 +18,31 @@ class UserController extends Controller
     public function create()
     {
         $title = 'Add User';
-        return view('pages.user.create', compact('user'));
+        return view('pages.user.create', compact('title'));
     }
 
     public function store(Request $request)
     {
-        // TODO
+        try {
+            $request->validate([
+                'name' => 'required|string|max:100',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8'
+            ]);
+            
+            $user = new User();
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->password = bcrypt($request->input('password'));
+            $user->save();
+
+            return redirect('user')->with('success', 'User added successfully.');
+
+        } catch (\Throwable $th) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to add user. ' . $th->getMessage()]);
+        }
     }
 
     public function edit($id)

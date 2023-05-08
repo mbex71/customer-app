@@ -18,6 +18,7 @@
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">{{ $title }}</h3>
+                        <button class="btn btn-primary btn-sm pull-right" onclick="goAddUser()"><i class="fa fa-plus"></i> Create</button>
                     </div>
                     <div class="box-body">
                         <div class="table-responsive">
@@ -60,6 +61,12 @@
             </div>
         </div>
     </section>
+
+    <script>
+        function goAddUser() {
+            window.location.href = "{{ url('user/create') }}";
+        }
+    </script>
 
 </div>
 
