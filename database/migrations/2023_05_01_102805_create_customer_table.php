@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('customer', function (Blueprint $table) {
+            $table->integer('id', true);
+            $table->string('gender', 25)->nullable();
+            $table->integer('age')->nullable();
+            $table->string('income', 100)->nullable();
+            $table->string('spending_score', 50)->nullable();
+            $table->string('profession')->nullable();
+            $table->integer('work_experience')->nullable();
+            $table->integer('family_size')->nullable();
+            $table->timestamps(6);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('customer');
+    }
+};
